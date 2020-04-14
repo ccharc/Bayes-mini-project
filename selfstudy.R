@@ -6,15 +6,20 @@ library(Matrix)
 A=sparseMatrix(i=c(2,5),j=c(3,5),x=c(1,2),dims=c(5,5))
 #take a look at A
 A
-
+n=5
+a=4
 
 #skeleton for profile likelihood procedure
 profile.likelihood=function(a,y,X,maximize=T){
   
   n=length(y)
   #construct B^{-1} and sqrt(D^{-1}) - both as sparse matrices
-  ......
-  #Compute S
+  
+  
+  B1 = sparseMatrix(i=c(1:n,2:n), j=c(1:n,2:n-1), x=c(rep(1,n),rep(a, n-1)), dims=c(n,n), triangular = TRUE)
+  B1
+  
+#Compute S
   ......
   
   ytilde=as.numeric(S%*%y)#some conversions of formats needed so that lm() is happy (wants data to be of type numeric and design matrix Xtilde to be of ordinary matrix type)
