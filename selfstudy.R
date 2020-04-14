@@ -15,7 +15,6 @@ profile.likelihood=function(a,y,X,maximize=T){
   n=length(y)
   #construct B^{-1} and sqrt(D^{-1}) - both as sparse matrices
   
-  
   B1 = sparseMatrix(i=c(1:n,2:n), j=c(1:n,2:n-1), x=c(rep(1,n),rep(a, n-1)), dims=c(n,n), triangular = TRUE)
   B1
   
