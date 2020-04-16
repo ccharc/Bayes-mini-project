@@ -38,13 +38,13 @@ profile.likelihood=function(a,y,X,maximize=T) {
 n=10000
 a=0.5
 tau2=1
-nu=sqrt(tau2)*Droot%*%rnorm(n)#Droot inverse of Dinvroot and Binv defined as above
+Droot = solve(sqDinv)
+nu=sqrt(tau2)*Droot%*%rnorm(n)
 
-U=solve(Binv,nu)#This corresponds to computing U=B eps
+U=solve(B1,nu)
 
-#Ucheck=solve(Binv)%*%eps  don't do this if n is large ! B is not sparse !!
 
-plot(U,type="l")#take a look at simulated errors
+plot(U,type="l")
 mean(U)
 var(as.numeric(U))
 acf(as.numeric(U))
@@ -56,3 +56,7 @@ y=3+2*x+U
 afit=optimize(profile.likelihood,interval=c(-1,1),y=y,X=X,maximum=T)
 
 profile.likelihood(afit$maximum,y,X,maximize=F)
+
+
+
+
