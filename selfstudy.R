@@ -16,20 +16,17 @@ profile.likelihood=function(a,y,X,maximize=T) {
 
 
   S = sqDinv %*% B1
-  S
   
   ytilde=as.numeric(S%*%y)
   Xtilde=as.matrix(S%*%cbind(rep(1,n),X))
   
   fit=lm(ytilde~-1+Xtilde)
   
-  
-  
   detS=det(S)
   if (maximize){
-    return(logLik(fit))
+    return(logLik(fit)*detS)
     }else{ 
-    loglikelihood = logLik(fit)
+    loglikelihood = logLik(fit)*detS
   return(list(loglikelihood,fit))
     }         
           
