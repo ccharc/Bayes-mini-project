@@ -115,3 +115,6 @@ tempa=(ahat+1)/2
 thetastart=c(log(tempa/(1-tempa)),log(phihat))
 neg.log.profile.likelihood(thetastart,y,X,minimize=F)
 
+
+
+
