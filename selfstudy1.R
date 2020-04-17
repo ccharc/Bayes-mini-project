@@ -8,7 +8,7 @@ neg.log.profile.likelihood=function(theta,y,X,minimize=T){
   
   a=2*exp(theta[1])/(1+exp(theta[1]))-1
   phi=exp(theta[2])
-  #print(c(a,phi))
+  print(c(a,phi))
   
   n=length(y)
   #construct B and sqrt(D) as sparse matrices

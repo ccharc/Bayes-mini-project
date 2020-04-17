@@ -87,3 +87,4 @@ filename=paste("plot",format(k),format(j),".pdf",sep="")
 #mean(U)
 #var(as.numeric(U))
 #acf(as.numeric(U))
+
