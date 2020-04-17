@@ -12,12 +12,12 @@ neg.log.profile.likelihood=function(theta,y,X,minimize=T){
   
   n=length(y)
   #construct B and sqrt(D) as sparse matrices
-  ......................
+  B1 = sparseMatrix(i=c(1:n,2:n), j=c(1:n,2:n-1), x=c(rep(1,n),rep(-a, n-1)), dims=c(n,n), triangular = TRUE)
   
-  #Compute Q and Qtilde (again as sparse matrices
-  
-  ...................
-  
+  sqDinv = sqrt(sparseMatrix(i=c(1:n), j=c(1:n), x=c((1-a^2),rep(1,n-1))))
+ 
+  #Compute Q and Qtilde (again as sparse matrices)
+  Q  = t(B1)%*%sqDinv%*%B1
   Qtilde=sparseMatrix(i=c(1:n),j=c(1:n),x=rep(phi,n))+Q
   
   #compute Cholesky factorization
@@ -27,7 +27,16 @@ neg.log.profile.likelihood=function(theta,y,X,minimize=T){
   #compute \hat \beta(\theta)
   #(X^T W^{-1} X)^{-1} X^\T W^{-1} y
   #using Cholesky factor CholQtilde
-  ...........................................
+  w = Q%*%y
+  x = solve(t(CholQtilde),w)
+  WinvY= solve(CholQtilde,x) 
+  
+  w = Q%*%X
+  x = solve(t(CholQtilde),w)
+  WinvX= solve(CholQtilde,x) 
+  
+  betahat = solve(t(X) %*% WinvX) %*% t(X) %*%  WinvY
+  
   
   #check when n small
   #Winv=solve(Qtilde)%*%Q
@@ -35,8 +44,11 @@ neg.log.profile.likelihood=function(theta,y,X,minimize=T){
   
   #compute \hat \sigma^2(\theta)
   residual=y-X%*%betahat
-  .................................
-  sigma2hat=sum(residual*z)/n
+  w = Q%*%residual
+  x = solve(t(CholQtilde),w)
+  WinvRes= solve(CholQtilde,x) 
+  
+  sigma2hat=sum(residual*WinvRes)/n
   
   #check
   #z3=Winv%*%residual
@@ -53,8 +65,7 @@ neg.log.profile.likelihood=function(theta,y,X,minimize=T){
   #detVinv=det(Q)/(det(Qtilde)*sigma2hat^n)
   #logdetVinvhalf=log(det(Q))/2-log(det(Qtilde))/2-n*log(sigma2hat)/2
   
-  Q = solve(B1) %*% Droot %*% transpose(solve(B1))
-  detQ= det(Q)
+  detQ=det(Q)
   
   loglikelihood=-n*log(sigma2hat)/2-determinant(CholQtilde)$modulus+log(detQ)/2
   #return negative log likelihood for later use with optim() which minimizes as default.
@@ -96,6 +107,11 @@ thetastart=c(log(tempa/(1-tempa)),log(1))
 thetafit=optim(thetastart,neg.log.profile.likelihood,y=y,X=X)
 thetafit
 
-2*exp(thetafit$par[1])/(1+exp(thetafit$par[1]))-1
-exp(thetafit$par[2])
+ahat=2*exp(thetafit$par[1])/(1+exp(thetafit$par[1]))-1
+phihat=exp(thetafit$par[2])
+
+
+tempa=(ahat+1)/2
+thetastart=c(log(tempa/(1-tempa)),log(phihat))
+neg.log.profile.likelihood(thetastart,y,X,minimize=F)
 

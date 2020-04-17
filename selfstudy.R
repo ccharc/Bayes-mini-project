@@ -3,6 +3,7 @@ library(Matrix)
 ############################first part of selfstudy#############################
 
 
+
 #skeleton for profile likelihood procedure
 profile.likelihood=function(a,y,X,maximize=T) {
   
@@ -10,9 +11,9 @@ profile.likelihood=function(a,y,X,maximize=T) {
 
   
   B1 = sparseMatrix(i=c(1:n,2:n), j=c(1:n,2:n-1), x=c(rep(1,n),rep(-a, n-1)), dims=c(n,n), triangular = TRUE)
-  B1
+
   sqDinv = sqrt(sparseMatrix(i=c(1:n), j=c(1:n), x=c((1-a^2),rep(1,n-1))))
-  sqDinv
+
 
   S = sqDinv %*% B1
   S
