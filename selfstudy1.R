@@ -53,7 +53,8 @@ neg.log.profile.likelihood=function(theta,y,X,minimize=T){
   #detVinv=det(Q)/(det(Qtilde)*sigma2hat^n)
   #logdetVinvhalf=log(det(Q))/2-log(det(Qtilde))/2-n*log(sigma2hat)/2
   
-  detQ=...
+  Q = solve(B1) %*% Droot %*% transpose(solve(B1))
+  detQ= det(Q)
   
   loglikelihood=-n*log(sigma2hat)/2-determinant(CholQtilde)$modulus+log(detQ)/2
   #return negative log likelihood for later use with optim() which minimizes as default.
